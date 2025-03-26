@@ -1,10 +1,13 @@
 
 import React, { useState } from 'react';
-import { ShieldAlert, Database, Server, Eye, EyeOff, AlertTriangle, Shield } from 'lucide-react';
+import { ShieldAlert, Database, Server, Eye, EyeOff, AlertTriangle, Shield, Code, ArrowRight } from 'lucide-react';
 import EncryptedData from '../components/EncryptedData';
+import { Button } from '@/components/ui/button';
 
 const HackerPortal = () => {
   const [showDecrypted, setShowDecrypted] = useState(false);
+  const [currentView, setCurrentView] = useState<'basic' | 'advanced'>('basic');
+  const [attemptedHack, setAttemptedHack] = useState(false);
   
   // Encrypted data examples
   const databaseData = [
@@ -29,6 +32,14 @@ const HackerPortal = () => {
   
   const toggleDecryption = () => {
     setShowDecrypted(!showDecrypted);
+  };
+  
+  const simulateHackAttempt = () => {
+    setAttemptedHack(true);
+    setTimeout(() => {
+      // Reset after 3 seconds
+      setAttemptedHack(false);
+    }, 3000);
   };
   
   return (
@@ -59,7 +70,33 @@ const HackerPortal = () => {
         </div>
       </div>
       
-      {/* Toggle to show "decrypted" data */}
+      {/* View type toggle */}
+      <div className="flex justify-center mb-6">
+        <div className="bg-banking-light p-1 rounded-lg flex">
+          <button
+            onClick={() => setCurrentView('basic')}
+            className={`px-4 py-2 rounded ${
+              currentView === 'basic' 
+                ? 'bg-white shadow text-banking-DEFAULT' 
+                : 'text-banking-muted'
+            }`}
+          >
+            Basic View
+          </button>
+          <button
+            onClick={() => setCurrentView('advanced')}
+            className={`px-4 py-2 rounded ${
+              currentView === 'advanced' 
+                ? 'bg-white shadow text-banking-DEFAULT' 
+                : 'text-banking-muted'
+            }`}
+          >
+            Advanced (SQL View)
+          </button>
+        </div>
+      </div>
+      
+      {/* Encryption toggle */}
       <div className="flex justify-center mb-8">
         <button
           onClick={toggleDecryption}
@@ -86,44 +123,45 @@ const HackerPortal = () => {
         </button>
       </div>
       
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Database Structure */}
-        <div className="banking-card">
-          <h2 className="banking-card-header">
-            <Database className="h-5 w-5 text-banking-accent mr-2" />
-            Database Structure
-          </h2>
-          
-          <div className="space-y-4">
-            {databaseData.map((table) => (
-              <div key={table.table} className="bg-banking-light rounded-lg p-4">
-                <p className="font-mono font-semibold mb-2">{table.table}</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {table.columns.map((column) => (
-                    <div key={column} className="bg-white p-2 rounded text-xs font-mono">
-                      {column}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* "Stolen" Data */}
-        <div className="space-y-6">
+      {currentView === 'basic' ? (
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Database Structure */}
           <div className="banking-card">
             <h2 className="banking-card-header">
-              <ShieldAlert className="h-5 w-5 text-banking-danger mr-2" />
-              "Stolen" Account Data
+              <Database className="h-5 w-5 text-banking-accent mr-2" />
+              Database Structure
             </h2>
             
-            <div className="bg-banking-light rounded-lg p-4 overflow-x-auto font-mono text-sm">
-              <pre className="whitespace-pre-wrap">
-                {showDecrypted ? (
-                  JSON.stringify(stolenData.accounts, null, 2)
-                ) : (
-                  `[
+            <div className="space-y-4">
+              {databaseData.map((table) => (
+                <div key={table.table} className="bg-banking-light rounded-lg p-4">
+                  <p className="font-mono font-semibold mb-2">{table.table}</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {table.columns.map((column) => (
+                      <div key={column} className="bg-white p-2 rounded text-xs font-mono">
+                        {column}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* "Stolen" Data */}
+          <div className="space-y-6">
+            <div className="banking-card">
+              <h2 className="banking-card-header">
+                <ShieldAlert className="h-5 w-5 text-banking-danger mr-2" />
+                "Stolen" Account Data
+              </h2>
+              
+              <div className="bg-banking-light rounded-lg p-4 overflow-x-auto font-mono text-sm">
+                <pre className="whitespace-pre-wrap">
+                  {showDecrypted ? (
+                    JSON.stringify(stolenData.accounts, null, 2)
+                  ) : (
+                    `[
   {
     "id": 1,
     "user_id": "${<EncryptedData originalValue="567" />}",
@@ -146,23 +184,23 @@ const HackerPortal = () => {
     "created_at": "${<EncryptedData originalValue="2022-11-22T16:45:10Z" />}"
   }
 ]`
-                )}
-              </pre>
+                  )}
+                </pre>
+              </div>
             </div>
-          </div>
-          
-          <div className="banking-card">
-            <h2 className="banking-card-header">
-              <ShieldAlert className="h-5 w-5 text-banking-danger mr-2" />
-              "Stolen" Transaction Data
-            </h2>
             
-            <div className="bg-banking-light rounded-lg p-4 overflow-x-auto font-mono text-sm">
-              <pre className="whitespace-pre-wrap">
-                {showDecrypted ? (
-                  JSON.stringify(stolenData.transactions, null, 2)
-                ) : (
-                  `[
+            <div className="banking-card">
+              <h2 className="banking-card-header">
+                <ShieldAlert className="h-5 w-5 text-banking-danger mr-2" />
+                "Stolen" Transaction Data
+              </h2>
+              
+              <div className="bg-banking-light rounded-lg p-4 overflow-x-auto font-mono text-sm">
+                <pre className="whitespace-pre-wrap">
+                  {showDecrypted ? (
+                    JSON.stringify(stolenData.transactions, null, 2)
+                  ) : (
+                    `[
   {
     "id": 101,
     "account_id": 1,
@@ -188,10 +226,107 @@ const HackerPortal = () => {
     "timestamp": "${<EncryptedData originalValue="2023-06-05T12:15:00Z" />}"
   }
 ]`
-                )}
-              </pre>
+                  )}
+                </pre>
+              </div>
             </div>
           </div>
+        </div>
+      ) : (
+        /* Advanced SQL View */
+        <div className="banking-card mb-8">
+          <h2 className="banking-card-header">
+            <Code className="h-5 w-5 text-banking-danger mr-2" />
+            SQL Query Attempt
+          </h2>
+          
+          <div className="space-y-4">
+            <div className="bg-banking-light rounded-lg p-4">
+              <div className="font-mono text-sm mb-2 text-banking-muted">
+                # Hacker's SQL query:
+              </div>
+              <div className="bg-slate-800 text-white p-4 rounded font-mono text-sm whitespace-pre overflow-x-auto">
+                {`SELECT a.id, a.user_id, a.balance, a.account_type, 
+       t.amount, t.merchant, t.timestamp
+FROM accounts a
+JOIN transactions t ON a.id = t.account_id
+WHERE a.balance > 10000;`}
+              </div>
+            </div>
+            
+            <div className="bg-banking-light rounded-lg p-4">
+              <div className="font-mono text-sm mb-2 text-banking-muted">
+                # Query results:
+              </div>
+              <div className="bg-slate-800 text-white p-4 rounded font-mono text-sm whitespace-pre overflow-x-auto">
+                {showDecrypted ? 
+                `id | user_id | balance    | account_type | amount   | merchant      | timestamp
+---+---------+------------+--------------+----------+---------------+------------------------
+1  | 567     | 24500.00   | checking     | -120.45  | Grocery Store | 2023-06-08T15:32:10Z
+1  | 567     | 24500.00   | checking     | 3500.00  | Employer Inc  | 2023-06-01T09:00:00Z
+2  | 890     | 156780.25  | savings      | -85.20   | Electric Co   | 2023-06-05T12:15:00Z
+
+(3 rows returned)`
+                : 
+                `id | user_id                   | balance                     | account_type               | amount                      | merchant                   | timestamp
+---+---------------------------+-----------------------------+---------------------------+-----------------------------+---------------------------+---------------------------
+1  | ${<EncryptedData originalValue="567" />}      | ${<EncryptedData originalValue="24500.00" />}      | ${<EncryptedData originalValue="checking" />}      | ${<EncryptedData originalValue="-120.45" />}      | ${<EncryptedData originalValue="Grocery Store" />}      | ${<EncryptedData originalValue="2023-06-08T15:32:10Z" />}
+1  | ${<EncryptedData originalValue="567" />}      | ${<EncryptedData originalValue="24500.00" />}      | ${<EncryptedData originalValue="checking" />}      | ${<EncryptedData originalValue="3500.00" />}      | ${<EncryptedData originalValue="Employer Inc" />}      | ${<EncryptedData originalValue="2023-06-01T09:00:00Z" />}
+2  | ${<EncryptedData originalValue="890" />}      | ${<EncryptedData originalValue="156780.25" />}      | ${<EncryptedData originalValue="savings" />}      | ${<EncryptedData originalValue="-85.20" />}      | ${<EncryptedData originalValue="Electric Co" />}      | ${<EncryptedData originalValue="2023-06-05T12:15:00Z" />}
+
+ERROR: Cannot compare encrypted values without decryption key`}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Hack attempt simulator */}
+      <div className="banking-card mt-8 bg-slate-800 text-white">
+        <h2 className="text-lg font-bold mb-3 flex items-center">
+          <ShieldAlert className="h-5 w-5 text-red-400 mr-2" />
+          Hack Attempt Simulator
+        </h2>
+        
+        <div className="space-y-4">
+          <p className="text-sm opacity-80">
+            Try to run a simulated hack to steal customer data or manipulate the database
+          </p>
+          
+          <div className="flex space-x-4">
+            <Button 
+              variant="destructive" 
+              className="bg-red-600 hover:bg-red-700" 
+              onClick={simulateHackAttempt}
+              disabled={attemptedHack}
+            >
+              <Code className="mr-2 h-4 w-4" />
+              <span>Run SQL Injection Attack</span>
+            </Button>
+            
+            <Button 
+              variant="destructive" 
+              className="bg-red-600 hover:bg-red-700" 
+              onClick={simulateHackAttempt}
+              disabled={attemptedHack}
+            >
+              <Server className="mr-2 h-4 w-4" />
+              <span>Attempt Database Dump</span>
+            </Button>
+          </div>
+          
+          {attemptedHack && (
+            <div className="mt-4 bg-red-900/40 p-4 rounded-md text-sm border border-red-500 animate-pulse">
+              <div className="font-mono">
+                <p className="text-red-300">ERROR: Unable to decrypt data</p>
+                <p className="text-red-300">ERROR: Homomorphic encryption prevents raw access</p>
+                <p className="text-red-300">ERROR: Access attempt logged and reported</p>
+                <p className="text-white mt-2">
+                  System protected by FHE (Fully Homomorphic Encryption)
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       

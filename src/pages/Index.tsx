@@ -1,10 +1,13 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, ArrowRight, Lock, Database, Server, CreditCard } from 'lucide-react';
+import { Shield, ArrowRight, Lock, Database, Server, CreditCard, UserPlus } from 'lucide-react';
 import EncryptedData from '../components/EncryptedData';
+import useAuth from '@/hooks/useAuth';
 
 const Index = () => {
+  const { isAuthenticated, user } = useAuth();
+  
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -29,13 +32,33 @@ const Index = () => {
               </p>
               
               <div className="flex flex-wrap gap-4">
-                <Link 
-                  to="/customer" 
-                  className="inline-flex items-center space-x-2 bg-banking-DEFAULT text-white px-5 py-2.5 rounded-md font-medium transition-all hover:bg-banking-DEFAULT/90"
-                >
-                  <span>Try Customer Portal</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+                {isAuthenticated && user?.role === 'customer' ? (
+                  <Link 
+                    to="/customer" 
+                    className="inline-flex items-center space-x-2 bg-banking-DEFAULT text-white px-5 py-2.5 rounded-md font-medium transition-all hover:bg-banking-DEFAULT/90"
+                  >
+                    <span>Go to Customer Portal</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                ) : (
+                  <>
+                    <Link 
+                      to="/login" 
+                      className="inline-flex items-center space-x-2 bg-banking-DEFAULT text-white px-5 py-2.5 rounded-md font-medium transition-all hover:bg-banking-DEFAULT/90"
+                    >
+                      <span>Sign In</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    
+                    <Link 
+                      to="/register" 
+                      className="inline-flex items-center space-x-2 bg-white border border-banking-DEFAULT/20 text-banking-DEFAULT px-5 py-2.5 rounded-md font-medium transition-all hover:bg-banking-DEFAULT/5"
+                    >
+                      <UserPlus className="h-4 w-4 mr-1" />
+                      <span>Create Account</span>
+                    </Link>
+                  </>
+                )}
                 
                 <Link 
                   to="/hacker" 
@@ -91,7 +114,7 @@ const Index = () => {
               {/* Encrypted data overlay */}
               <div className="absolute -bottom-4 right-4 glass-card p-4 rotate-3 text-xs max-w-[280px]">
                 <p className="font-medium text-banking-DEFAULT mb-2">What hackers see:</p>
-                <div className="encrypted-text overflow-hidden leading-relaxed">
+                <div className="encrypted-text overflow-hidden leading-relaxed font-mono">
                   <EncryptedData originalValue="account_balance" /> : <EncryptedData originalValue="$24,500.00" /><br />
                   <EncryptedData originalValue="transaction" /> : <EncryptedData originalValue="coffee_shop" /><br />
                   <EncryptedData originalValue="amount" /> : <EncryptedData originalValue="$4.50" /><br />
