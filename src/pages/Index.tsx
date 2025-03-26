@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, ArrowRight, Lock, Database, Server, CreditCard, UserPlus } from 'lucide-react';
@@ -9,10 +8,15 @@ const Index = () => {
   const { isAuthenticated, user } = useAuth();
   
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      {/* Background Image - Semi-transparent so it doesn't overpower content */}
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-10 -z-10"
+           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2400')" }}>
+      </div>
+
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-banking-light to-blue-50 -z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-banking-light to-blue-50 opacity-80 -z-10"></div>
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6 animate-slide-right">
@@ -127,7 +131,7 @@ const Index = () => {
       </section>
       
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white/90 backdrop-blur-sm">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-banking-DEFAULT mb-4">Uncompromising Security</h2>
@@ -171,7 +175,7 @@ const Index = () => {
       </section>
       
       {/* Portal Previews */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+      <section className="py-20 bg-gradient-to-br from-slate-50/90 to-blue-50/90 backdrop-blur-sm">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-banking-DEFAULT mb-4">Three Secure Portals</h2>

@@ -10,7 +10,12 @@ const Login = () => {
   const role = new URLSearchParams(location.search).get('role') as 'customer' | 'manager' || 'customer';
   
   return (
-    <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4">
+    <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 relative">
+      {/* Background Image */}
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-5 -z-10"
+           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?q=80&w=2400')" }}>
+      </div>
+      
       <div className="mb-8 text-center">
         <div className="flex justify-center">
           <Shield className="h-12 w-12 text-banking-accent" />
@@ -25,7 +30,7 @@ const Login = () => {
         </p>
       </div>
       
-      <div className="w-full max-w-md glass-card p-8">
+      <div className="w-full max-w-md glass-card p-8 backdrop-blur-md">
         <AuthForm role={role} defaultMode="login" />
       </div>
     </div>
