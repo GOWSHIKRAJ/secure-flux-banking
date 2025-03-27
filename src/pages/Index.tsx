@@ -8,7 +8,11 @@ import PortalPreviewsSection from '@/components/home/PortalPreviewsSection';
 const Index = () => {
   return (
     <div className="min-h-screen relative">
-      <BackgroundImage imageUrl="https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2400" />
+      <BackgroundImage 
+        imageUrl="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2400" 
+        opacity={0.05}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-slate-50/50 -z-5"></div>
       <HeroSection />
       <FeaturesSection />
       <PortalPreviewsSection />
