@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, Fingerprint } from 'lucide-react';
+import BiometricAuth from './BiometricAuth';
+import { sendSecurityAlert } from '../../services/NotificationService';
+import useAuth from '../../hooks/useAuth';
 
 type AuthMode = 'login' | 'register';
 type UserRole = 'customer' | 'manager';
@@ -19,48 +22,94 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showBiometric, setShowBiometric] = useState(false);
   
+  const { login } = useAuth();
   const navigate = useNavigate();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // In a real app, this would connect to a backend
-    // Here we'll simulate authentication with localStorage
-    setTimeout(() => {
-      if (mode === 'login') {
-        // Demo login logic (simplified)
-        if (role === 'manager' && email === 'manager@secureflux.com' && password === 'secure123') {
-          // Manager login success
-          localStorage.setItem('auth', JSON.stringify({ role: 'manager', email, name: 'Bank Manager' }));
-          toast.success("Welcome back, Bank Manager");
-          navigate('/manager');
-        } else if (role === 'customer') {
-          // Demo customer login - accept any credentials for demo
-          localStorage.setItem('auth', JSON.stringify({ role: 'customer', email, name: email.split('@')[0] }));
-          toast.success("Login successful");
-          navigate('/customer');
+    try {
+      // In a real app, this would connect to a backend
+      // Here we'll simulate authentication with localStorage
+      setTimeout(() => {
+        if (mode === 'login') {
+          // Demo login logic (simplified)
+          if (role === 'manager' && email === 'manager@secureflux.com' && password === 'secure123') {
+            // Manager login success
+            login({ role: 'manager', email, name: 'Bank Manager' });
+            toast.success("Welcome back, Bank Manager");
+            navigate('/manager');
+          } else if (role === 'customer') {
+            // Demo customer login - accept any credentials for demo
+            login({ role: 'customer', email, name: email.split('@')[0] });
+            toast.success("Login successful");
+            navigate('/customer');
+          } else {
+            toast.error("Invalid credentials");
+            
+            if (role === 'manager') {
+              // Send security alert for failed manager login
+              sendSecurityAlert({
+                message: `Failed login attempt to Manager Portal using email: ${email}`,
+                type: 'login',
+                phoneNumber
+              });
+            }
+          }
         } else {
-          toast.error("Invalid credentials");
+          // Register - store in localStorage
+          if (role === 'customer') {
+            login({ role: 'customer', email, name: name || email.split('@')[0] });
+            toast.success("Account created successfully");
+            navigate('/customer');
+          } else if (role === 'manager') {
+            // For demo purposes, allow manager registration
+            login({ role: 'manager', email, name: name || 'New Manager' });
+            toast.success("Manager account created successfully");
+            
+            // Send security alert for new manager account
+            sendSecurityAlert({
+              message: `New manager account created: ${email}`,
+              type: 'security',
+              phoneNumber
+            });
+            
+            navigate('/manager');
+          }
         }
-      } else {
-        // Register - only for customers in this demo
-        if (role === 'customer') {
-          localStorage.setItem('auth', JSON.stringify({ role: 'customer', email, name: name || email.split('@')[0] }));
-          toast.success("Account created successfully");
-          navigate('/customer');
-        }
-      }
+        setIsSubmitting(false);
+      }, 1000);
+    } catch (error) {
+      toast.error("Authentication failed");
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
   
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  
+  const handleBiometricSuccess = () => {
+    // For demo, just log in as manager
+    login({ role: 'manager', email: 'manager@secureflux.com', name: 'Bank Manager' });
+    toast.success("Biometric authentication successful");
+    navigate('/manager');
+  };
+  
+  if (showBiometric) {
+    return (
+      <BiometricAuth 
+        onSuccess={handleBiometricSuccess} 
+        onCancel={() => setShowBiometric(false)} 
+      />
+    );
+  }
   
   return (
     <div className="w-full max-w-md mx-auto">
@@ -143,6 +192,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
           </div>
         </div>
         
+        {/* Add phone number field for alerts */}
+        <div className="space-y-2">
+          <label htmlFor="phone" className="block text-sm font-medium text-banking-DEFAULT">
+            Phone Number (for security alerts)
+          </label>
+          <Input
+            id="phone"
+            type="tel"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder="+916379461979"
+            className="pl-3"
+          />
+          <p className="text-xs text-banking-muted">
+            We'll send security alerts to this number
+          </p>
+        </div>
+        
         <Button
           type="submit"
           className="w-full bg-banking-accent hover:bg-banking-accent/90 text-white"
@@ -155,22 +222,32 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
               : 'Create Account'}
         </Button>
         
-        {role === 'customer' && (
-          <div className="text-center mt-4">
-            <p className="text-sm text-banking-muted">
-              {mode === 'login' 
-                ? "Don't have an account? " 
-                : "Already have an account? "}
-              <button
-                type="button"
-                onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-                className="text-banking-accent hover:underline font-medium"
-              >
-                {mode === 'login' ? 'Sign up' : 'Sign in'}
-              </button>
-            </p>
-          </div>
+        {role === 'manager' && (
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full flex items-center justify-center mt-2"
+            onClick={() => setShowBiometric(true)}
+          >
+            <Fingerprint className="h-4 w-4 mr-2" />
+            <span>Use Biometric Authentication</span>
+          </Button>
         )}
+        
+        <div className="text-center mt-4">
+          <p className="text-sm text-banking-muted">
+            {mode === 'login' 
+              ? "Don't have an account? " 
+              : "Already have an account? "}
+            <button
+              type="button"
+              onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+              className="text-banking-accent hover:underline font-medium"
+            >
+              {mode === 'login' ? 'Sign up' : 'Sign in'}
+            </button>
+          </p>
+        </div>
       </form>
     </div>
   );

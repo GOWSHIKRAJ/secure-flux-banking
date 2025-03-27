@@ -1,21 +1,33 @@
 
 import React, { useState } from 'react';
-import { Lock, Unlock } from 'lucide-react';
+import { Lock, Unlock, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import { sendSecurityAlert } from '../services/NotificationService';
 
-const SecurityToggle: React.FC = () => {
+interface SecurityToggleProps {
+  phoneNumber?: string;
+}
+
+const SecurityToggle: React.FC<SecurityToggleProps> = ({ phoneNumber }) => {
   const [isSecure, setIsSecure] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   
-  const handleToggle = () => {
+  const handleToggle = async () => {
     if (isSecure) {
       setIsAnimating(true);
       
       // Security cannot actually be turned off
-      setTimeout(() => {
+      setTimeout(async () => {
         toast.error("ALERT! Unauthorized encryption tampering detected!", {
           description: "System locked. Admin verification required.",
           duration: 6000,
+        });
+        
+        // Send security alert via SMS
+        await sendSecurityAlert({
+          message: "ALERT! Unauthorized attempt to disable encryption detected.",
+          type: 'security',
+          phoneNumber: phoneNumber || '+916379461979'
         });
         
         setIsAnimating(false);

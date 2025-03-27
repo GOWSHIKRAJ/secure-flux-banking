@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { Shield, ArrowRight, CreditCard, Clock, Send, PiggyBank, DollarSign } from 'lucide-react';
 import EncryptedData from '../components/EncryptedData';
+import ActionButton from '../components/customer/ActionButton';
+import { toast } from 'sonner';
+import { sendSecurityAlert } from '../services/NotificationService';
 
 const CustomerPortal = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -43,6 +46,36 @@ const CustomerPortal = () => {
       category: 'Income' 
     }
   ];
+  
+  const handleSendMoney = () => {
+    toast.info("Send Money Feature", {
+      description: "This would open a transfer form in a real application.",
+    });
+  };
+  
+  const handleApplyForLoan = () => {
+    toast.info("Loan Application", {
+      description: "This would open a loan application form in a real application.",
+    });
+  };
+  
+  const handlePayBills = () => {
+    toast.info("Bill Payment", {
+      description: "This would open a bill payment form in a real application.",
+    });
+  };
+  
+  const handleLargeTransaction = () => {
+    // Simulate a security alert for large transaction
+    sendSecurityAlert({
+      message: "Large transaction initiated: $5,000.00 to Account *****4321",
+      type: 'transaction'
+    });
+    
+    toast.success("Transaction initiated", {
+      description: "A security alert has been sent to your registered mobile number",
+    });
+  };
   
   return (
     <div className="portal-container">
@@ -88,25 +121,27 @@ const CustomerPortal = () => {
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-              <button className="flex flex-col items-center justify-center p-4 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
-                <Send className="h-5 w-5 text-banking-accent mb-2" />
-                <span className="text-sm font-medium">Send Money</span>
-              </button>
+              <ActionButton 
+                icon={Send} 
+                label="Send Money" 
+                action={handleSendMoney} 
+              />
               
-              <button className="flex flex-col items-center justify-center p-4 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
-                <CreditCard className="h-5 w-5 text-banking-accent mb-2" />
-                <span className="text-sm font-medium">Pay Bills</span>
-              </button>
+              <ActionButton 
+                icon={CreditCard} 
+                label="Pay Bills" 
+                action={handlePayBills} 
+              />
               
-              <button className="flex flex-col items-center justify-center p-4 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
-                <PiggyBank className="h-5 w-5 text-banking-accent mb-2" />
-                <span className="text-sm font-medium">Save</span>
-              </button>
+              <ActionButton 
+                icon={PiggyBank} 
+                label="Save" 
+              />
               
-              <button className="flex flex-col items-center justify-center p-4 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
-                <DollarSign className="h-5 w-5 text-banking-accent mb-2" />
-                <span className="text-sm font-medium">Invest</span>
-              </button>
+              <ActionButton 
+                icon={DollarSign} 
+                label="Invest" 
+              />
             </div>
           </div>
           
@@ -218,22 +253,33 @@ const CustomerPortal = () => {
             <h2 className="banking-card-header">Quick Actions</h2>
             
             <div className="space-y-3">
-              <button className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
+              <button 
+                className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all"
+                onClick={handleApplyForLoan}
+              >
                 <span className="font-medium">Apply for Loan</span>
                 <ArrowRight className="h-4 w-4 text-banking-accent" />
               </button>
               
-              <button className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
+              <button 
+                className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all"
+                onClick={handlePayBills}
+              >
                 <span className="font-medium">Pay Credit Card</span>
                 <ArrowRight className="h-4 w-4 text-banking-accent" />
               </button>
               
-              <button className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
-                <span className="font-medium">Transfer Between Accounts</span>
+              <button 
+                className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all"
+                onClick={handleLargeTransaction}
+              >
+                <span className="font-medium">Transfer Large Amount</span>
                 <ArrowRight className="h-4 w-4 text-banking-accent" />
               </button>
               
-              <button className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all">
+              <button 
+                className="w-full flex items-center justify-between p-3 rounded-lg bg-banking-light hover:bg-banking-light/70 transition-all"
+              >
                 <span className="font-medium">View Statements</span>
                 <ArrowRight className="h-4 w-4 text-banking-accent" />
               </button>

@@ -1,8 +1,9 @@
-
 import React, { useState } from 'react';
-import { ShieldAlert, Database, Server, Eye, EyeOff, AlertTriangle, Shield, Code, ArrowRight } from 'lucide-react';
+import { ShieldAlert, Database, Server, Code, ArrowRight } from 'lucide-react';
 import EncryptedData from '../components/EncryptedData';
 import { Button } from '@/components/ui/button';
+import DecryptionControls from '../components/hacker/DecryptionControls';
+import { sendSecurityAlert } from '../services/NotificationService';
 
 const HackerPortal = () => {
   const [showDecrypted, setShowDecrypted] = useState(false);
@@ -30,12 +31,19 @@ const HackerPortal = () => {
     ]
   };
   
-  const toggleDecryption = () => {
-    setShowDecrypted(!showDecrypted);
+  const toggleDecryption = (state: boolean) => {
+    setShowDecrypted(state);
   };
   
   const simulateHackAttempt = () => {
     setAttemptedHack(true);
+    
+    // Send security alert
+    sendSecurityAlert({
+      message: "URGENT: Hack attempt detected on banking system",
+      type: 'security'
+    });
+    
     setTimeout(() => {
       // Reset after 3 seconds
       setAttemptedHack(false);
@@ -55,7 +63,7 @@ const HackerPortal = () => {
       <div className="banking-card bg-banking-danger/10 border border-banking-danger/20 mb-8">
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0">
-            <AlertTriangle className="h-6 w-6 text-banking-danger" />
+            <ShieldAlert className="h-6 w-6 text-banking-danger" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-banking-danger mb-1">Security Demonstration</h3>
@@ -96,31 +104,12 @@ const HackerPortal = () => {
         </div>
       </div>
       
-      {/* Encryption toggle */}
+      {/* Encryption toggle using the new component */}
       <div className="flex justify-center mb-8">
-        <button
-          onClick={toggleDecryption}
-          className={`
-            flex items-center space-x-3 px-5 py-3 rounded-full 
-            transition-all duration-300 border
-            ${showDecrypted 
-              ? 'bg-banking-danger/10 border-banking-danger/20 text-banking-danger' 
-              : 'bg-banking-success/10 border-banking-success/20 text-banking-success'
-            }
-          `}
-        >
-          {showDecrypted ? (
-            <>
-              <EyeOff className="h-5 w-5 mr-2" />
-              <span>Showing Decrypted Data (Insecure)</span>
-            </>
-          ) : (
-            <>
-              <Eye className="h-5 w-5 mr-2" />
-              <span>Showing Encrypted Data (Secure)</span>
-            </>
-          )}
-        </button>
+        <DecryptionControls 
+          isDecrypted={showDecrypted} 
+          onToggle={toggleDecryption} 
+        />
       </div>
       
       {currentView === 'basic' ? (
@@ -321,6 +310,7 @@ ERROR: Cannot compare encrypted values without decryption key`}
                 <p className="text-red-300">ERROR: Unable to decrypt data</p>
                 <p className="text-red-300">ERROR: Homomorphic encryption prevents raw access</p>
                 <p className="text-red-300">ERROR: Access attempt logged and reported</p>
+                <p className="text-red-300">ERROR: Security alert sent to administrator</p>
                 <p className="text-white mt-2">
                   System protected by FHE (Fully Homomorphic Encryption)
                 </p>

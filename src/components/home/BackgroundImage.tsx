@@ -8,12 +8,15 @@ interface BackgroundImageProps {
 
 const BackgroundImage: React.FC<BackgroundImageProps> = ({ 
   imageUrl, 
-  opacity = 10 
+  opacity = 0.1 
 }) => {
   return (
     <div 
-      className={`absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-${opacity} -z-10`}
-      style={{ backgroundImage: `url('${imageUrl}')` }}
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed -z-10"
+      style={{ 
+        backgroundImage: `url('${imageUrl}')`,
+        opacity: opacity
+      }}
     />
   );
 };
