@@ -1,13 +1,17 @@
-
 import React, { useState } from 'react';
-import { Shield, ArrowRight, CreditCard, Clock, Send, PiggyBank, DollarSign } from 'lucide-react';
+import { Shield, ArrowRight, CreditCard, Clock, Send, PiggyBank, DollarSign, UserPlus, LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import EncryptedData from '../components/EncryptedData';
 import ActionButton from '../components/customer/ActionButton';
 import { toast } from 'sonner';
 import { sendSecurityAlert } from '../services/NotificationService';
+import useAuth from '../hooks/useAuth';
+import { Button } from '@/components/ui/button';
 
 const CustomerPortal = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   
   const transactions = [
     { 
@@ -66,7 +70,6 @@ const CustomerPortal = () => {
   };
   
   const handleLargeTransaction = () => {
-    // Simulate a security alert for large transaction
     sendSecurityAlert({
       message: "Large transaction initiated: $5,000.00 to Account *****4321",
       type: 'transaction'
@@ -76,6 +79,59 @@ const CustomerPortal = () => {
       description: "A security alert has been sent to your registered mobile number",
     });
   };
+  
+  const navigateToLogin = () => {
+    navigate('/login');
+  };
+  
+  const navigateToRegister = () => {
+    navigate('/register');
+  };
+  
+  if (!isAuthenticated) {
+    return (
+      <div className="portal-container">
+        <div className="portal-header">
+          <h1 className="portal-heading">Customer Portal</h1>
+          <p className="portal-subheading">
+            Please sign in or create an account to access your secure banking dashboard
+          </p>
+        </div>
+        
+        <div className="w-full max-w-md mx-auto glass-card p-8 backdrop-blur-md">
+          <div className="space-y-6">
+            <div className="text-center">
+              <Shield className="h-12 w-12 text-banking-accent mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-banking-DEFAULT mb-2">Secure Access Required</h2>
+              <p className="text-banking-muted mb-6">
+                Your financial data is protected with homomorphic encryption technology.
+                Please authenticate to access your account.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <Button 
+                className="w-full bg-banking-accent hover:bg-banking-accent/90 text-white flex items-center justify-center"
+                onClick={navigateToLogin}
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                Sign In to Your Account
+              </Button>
+              
+              <Button 
+                variant="outline"
+                className="w-full flex items-center justify-center"
+                onClick={navigateToRegister}
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                Create New Account
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="portal-container">
@@ -88,7 +144,6 @@ const CustomerPortal = () => {
       
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          {/* Balance Card */}
           <div className="banking-card">
             <h2 className="banking-card-header">
               <Shield className="h-5 w-5 text-banking-accent mr-2" />
@@ -145,7 +200,6 @@ const CustomerPortal = () => {
             </div>
           </div>
           
-          {/* Recent Transactions */}
           <div className="banking-card">
             <h2 className="banking-card-header">
               <Clock className="h-5 w-5 text-banking-accent mr-2" />
@@ -209,7 +263,6 @@ const CustomerPortal = () => {
         </div>
         
         <div className="space-y-6">
-          {/* Security Status */}
           <div className="banking-card">
             <h2 className="banking-card-header">
               <Shield className="h-5 w-5 text-banking-accent mr-2" />
@@ -248,7 +301,6 @@ const CustomerPortal = () => {
             </div>
           </div>
           
-          {/* Quick Actions */}
           <div className="banking-card">
             <h2 className="banking-card-header">Quick Actions</h2>
             
