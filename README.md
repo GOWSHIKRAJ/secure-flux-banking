@@ -1,69 +1,96 @@
-# Welcome to your Lovable project
 
-## Project info
+# SecureFlux Banking Application
 
-**URL**: https://lovable.dev/projects/b3fab324-ab19-49ab-807e-42fd662fa4fa
+## Description
+SecureFlux is a React-based banking application with a focus on security through homomorphic encryption simulation. It features different portals for customers, managers, and a hacker demonstration view.
 
-## How can I edit this code?
+## Features
+- Customer portal with transaction history and account management
+- Manager portal with customer data oversight
+- Hacker demonstration portal showcasing encrypted data
+- Login and registration functionality
+- Responsive design with Tailwind CSS
 
-There are several ways of editing your application.
+## Tech Stack
+- React
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+- React Router
+- React Query
+- Lucide Icons
 
-**Use Lovable**
+## Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn or bun
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b3fab324-ab19-49ab-807e-42fd662fa4fa) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## Installation
+1. Clone the repository:
+```bash
+git clone [your-repository-url]
+cd secureflux-banking
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or 
+bun install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+# or
+bun dev
+```
 
-**Use GitHub Codespaces**
+4. Open your browser and navigate to:
+```
+http://localhost:5173
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Building for Production
+To build the app for production:
 
-## What technologies are used for this project?
+```bash
+npm run build
+# or
+yarn build
+# or
+bun build
+```
 
-This project is built with .
+The build artifacts will be stored in the `dist/` directory.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Directory Structure
+```
+src/
+├── components/    # Reusable UI components
+├── hooks/         # Custom React hooks
+├── lib/           # Utility functions
+├── pages/         # Page components
+├── services/      # API and service functions
+├── App.tsx        # Main application component
+├── main.tsx       # Application entry point
+```
 
-## How can I deploy this project?
+## Database Implementation
 
-Simply open [Lovable](https://lovable.dev/projects/b3fab324-ab19-49ab-807e-42fd662fa4fa) and click on Share -> Publish.
+This application currently uses a mock database implementation for demonstration purposes. In a real-world scenario, you would connect to:
 
-## I want to use a custom domain - is that possible?
+1. **Backend database** like PostgreSQL, MySQL, or MongoDB
+2. **API layer** using Express, NestJS, or similar
+3. **Authentication service** like Firebase Auth, Auth0, or a custom JWT implementation
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+To integrate with a real database:
+1. Replace the mock service in `src/services/DatabaseService.ts` with actual API calls
+2. Implement proper authentication and authorization
+3. Set up appropriate security measures for sensitive financial data
+
+## License
+[Specify your license here]
