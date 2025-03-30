@@ -4,11 +4,13 @@ import React from 'react';
 interface BackgroundImageProps {
   imageUrl: string;
   opacity?: number;
+  overlay?: boolean;
 }
 
 const BackgroundImage: React.FC<BackgroundImageProps> = ({ 
   imageUrl, 
-  opacity = 0.1 
+  opacity = 0.15,
+  overlay = true
 }) => {
   return (
     <div className="fixed inset-0 -z-10">
@@ -19,7 +21,9 @@ const BackgroundImage: React.FC<BackgroundImageProps> = ({
           opacity: opacity
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 via-transparent to-slate-100/30"></div>
+      {overlay && (
+        <div className="absolute inset-0 bg-gradient-to-br from-banking-dark/20 via-banking-dark/10 to-banking-light/10"></div>
+      )}
     </div>
   );
 };

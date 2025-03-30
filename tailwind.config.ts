@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -68,16 +67,33 @@ export default {
           premium: '#1E40AF',
           gold: '#F59E0B',
           platinum: '#6366F1',
+          luxury: '#1F2937',
+          highlight: '#60A5FA'
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
         serif: ['Playfair Display', 'Georgia', 'serif'],
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
+      },
+      boxShadow: {
+        'premium': '0 10px 50px -5px rgba(0, 0, 0, 0.1), 0 5px 20px -5px rgba(0, 0, 0, 0.1)',
+        'premium-hover': '0 20px 60px -10px rgba(0, 0, 0, 0.1), 0 15px 25px -5px rgba(0, 0, 0, 0.06)',
+        'card-premium': '0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 15px 25px -7px rgba(0, 0, 0, 0.05)',
+        'luxury': '0 20px 60px -15px rgba(0, 0, 0, 0.2), 0 10px 30px -10px rgba(0, 0, 0, 0.1)',
+        'platinum': '0 35px 60px -15px rgba(0, 0, 0, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.15)',
+      },
+      backgroundImage: {
+        'premium-gradient': 'linear-gradient(135deg, #1E3A8A, #3B82F6)',
+        'gold-gradient': 'linear-gradient(135deg, #92400E, #F59E0B)',
+        'platinum-gradient': 'linear-gradient(135deg, #4F46E5, #A78BFA)',
+        'luxury-gradient': 'linear-gradient(135deg, #1F2937, #374151)',
+        'dark-gradient': 'linear-gradient(to bottom, rgba(3, 7, 18, 0.8), rgba(15, 23, 42, 0.9))',
+        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
       },
       keyframes: {
         'accordion-down': {
@@ -148,16 +164,6 @@ export default {
       },
       backdropBlur: {
         xs: '2px'
-      },
-      boxShadow: {
-        'premium': '0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 2px 6px -1px rgba(0, 0, 0, 0.06)',
-        'premium-hover': '0 20px 30px -10px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05)',
-        'card-premium': '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)'
-      },
-      backgroundImage: {
-        'premium-gradient': 'linear-gradient(to right, #1E3A8A, #3B82F6)',
-        'gold-gradient': 'linear-gradient(to right, #92400E, #F59E0B)',
-        'platinum-gradient': 'linear-gradient(to right, #4F46E5, #A78BFA)'
       }
     }
   },

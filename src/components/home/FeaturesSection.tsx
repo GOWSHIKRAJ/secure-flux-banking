@@ -1,46 +1,76 @@
 
 import React from 'react';
-import { Lock, Database, Server } from 'lucide-react';
+import { Shield, CreditCard, Globe, Clock, Briefcase, LineChart } from 'lucide-react';
 
 const FeaturesSection = () => {
   return (
-    <section className="py-20 bg-white/90 backdrop-blur-sm">
+    <section className="py-24 bg-white/95 backdrop-blur-sm">
       <div className="container max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-banking-DEFAULT mb-4">Uncompromising Security</h2>
-          <p className="text-banking-muted max-w-2xl mx-auto">
-            Explore our revolutionary approach to banking security with fully homomorphic encryption.
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-banking-dark mb-4 font-serif">Uncompromising Security and Service</h2>
+          <p className="text-banking-muted max-w-3xl mx-auto text-lg">
+            Experience the perfect blend of cutting-edge security and premium banking services tailored for discerning clients.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="glass-card p-6 space-y-4">
-            <div className="h-12 w-12 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-4">
-              <Lock className="h-6 w-6" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="glass-card p-8 shadow-premium hover:shadow-premium-hover transition-all duration-300">
+            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-6">
+              <Shield className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-banking-DEFAULT">Fully Homomorphic Encryption</h3>
+            <h3 className="text-xl font-semibold text-banking-dark mb-3">Fully Homomorphic Encryption</h3>
             <p className="text-banking-muted">
-              Your data remains encrypted even during processing, ensuring complete protection against breaches.
+              Your data remains encrypted even during processing, ensuring complete protection against sophisticated breaches.
             </p>
           </div>
           
-          <div className="glass-card p-6 space-y-4">
-            <div className="h-12 w-12 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-4">
-              <Database className="h-6 w-6" />
+          <div className="glass-card p-8 shadow-premium hover:shadow-premium-hover transition-all duration-300">
+            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-6">
+              <CreditCard className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-banking-DEFAULT">Secure Transactions</h3>
+            <h3 className="text-xl font-semibold text-banking-dark mb-3">Premium Credit Cards</h3>
             <p className="text-banking-muted">
-              All financial operations happen on encrypted data, with zero exposure of your sensitive information.
+              Access our exclusive metal credit cards with unlimited cashback, concierge service, and global lounge access.
             </p>
           </div>
           
-          <div className="glass-card p-6 space-y-4">
-            <div className="h-12 w-12 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-4">
-              <Server className="h-6 w-6" />
+          <div className="glass-card p-8 shadow-premium hover:shadow-premium-hover transition-all duration-300">
+            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-6">
+              <Globe className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-banking-DEFAULT">Tamper-Proof Systems</h3>
+            <h3 className="text-xl font-semibold text-banking-dark mb-3">Global Banking Network</h3>
             <p className="text-banking-muted">
-              Advanced security measures detect and prevent unauthorized attempts to disable encryption.
+              Manage your assets across 160+ countries with zero foreign transaction fees and preferred exchange rates.
+            </p>
+          </div>
+          
+          <div className="glass-card p-8 shadow-premium hover:shadow-premium-hover transition-all duration-300">
+            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-6">
+              <Clock className="h-7 w-7" />
+            </div>
+            <h3 className="text-xl font-semibold text-banking-dark mb-3">24/7 Dedicated Support</h3>
+            <p className="text-banking-muted">
+              Your personal financial advisor is available around the clock through our encrypted communication channels.
+            </p>
+          </div>
+          
+          <div className="glass-card p-8 shadow-premium hover:shadow-premium-hover transition-all duration-300">
+            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-6">
+              <Briefcase className="h-7 w-7" />
+            </div>
+            <h3 className="text-xl font-semibold text-banking-dark mb-3">Private Wealth Management</h3>
+            <p className="text-banking-muted">
+              Tailored investment strategies with access to exclusive opportunities not available to retail investors.
+            </p>
+          </div>
+          
+          <div className="glass-card p-8 shadow-premium hover:shadow-premium-hover transition-all duration-300">
+            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-banking-accent/10 text-banking-accent mb-6">
+              <LineChart className="h-7 w-7" />
+            </div>
+            <h3 className="text-xl font-semibold text-banking-dark mb-3">Advanced Analytics</h3>
+            <p className="text-banking-muted">
+              Proprietary AI-powered financial insights and predictive modeling for your investment portfolio.
             </p>
           </div>
         </div>

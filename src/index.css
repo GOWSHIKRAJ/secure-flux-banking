@@ -43,7 +43,7 @@
   body {
     @apply bg-background text-foreground antialiased overflow-x-hidden;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
-    background-image: url('https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=2070&auto=format&fit=crop');
+    background-image: url('https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2400');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -64,7 +64,7 @@
   }
   
   .premium-heading {
-    @apply text-4xl md:text-5xl font-bold text-gray-900 leading-tight tracking-tight;
+    @apply text-4xl md:text-5xl font-bold text-gray-900 leading-tight tracking-tight font-serif;
   }
   
   .premium-subheading {
@@ -86,11 +86,11 @@
   }
   
   .premium-card {
-    @apply bg-white rounded-xl border border-gray-100 shadow-xl transition-all duration-300 hover:shadow-2xl overflow-hidden;
+    @apply bg-white rounded-xl border border-gray-100 shadow-premium transition-all duration-300 hover:shadow-premium-hover overflow-hidden;
   }
   
   .premium-card-gradient {
-    @apply bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300;
+    @apply bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-100 shadow-premium hover:shadow-premium-hover transition-all duration-300;
   }
 
   .encrypted-text {
@@ -115,7 +115,7 @@
   }
 
   .portal-heading {
-    @apply text-3xl font-bold mb-2 tracking-tight;
+    @apply text-3xl font-bold mb-2 tracking-tight font-serif;
   }
   
   .portal-subheading {
@@ -123,27 +123,27 @@
   }
   
   .banking-card {
-    @apply glass-card p-6 mb-6;
+    @apply glass-card p-6 mb-6 shadow-premium hover:shadow-premium-hover transition-all duration-300;
   }
   
   .banking-card-header {
-    @apply text-xl font-medium mb-4 flex items-center;
+    @apply text-xl font-medium mb-4 flex items-center font-serif;
   }
   
   /* Premium Button Styles */
   .btn-premium {
-    @apply rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 font-medium
-    transform transition-all duration-200 hover:shadow-lg hover:from-blue-700 hover:to-blue-800 hover:-translate-y-0.5;
+    @apply rounded-lg bg-premium-gradient text-white px-8 py-3 font-medium shadow-premium
+    transform transition-all duration-200 hover:shadow-premium-hover hover:-translate-y-0.5;
   }
   
   .btn-premium-outline {
-    @apply rounded-full bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 font-medium
-    transform transition-all duration-200 hover:shadow-md hover:bg-blue-50;
+    @apply rounded-lg bg-white text-banking-premium border-2 border-banking-premium/20 px-8 py-3 font-medium
+    transform transition-all duration-200 hover:shadow-md hover:bg-banking-premium/5;
   }
   
   /* Premium Data Display */
   .data-card {
-    @apply bg-white/90 backdrop-blur-md rounded-xl p-6 border border-gray-100 shadow-lg;
+    @apply bg-white/90 backdrop-blur-md rounded-xl p-6 border border-gray-100 shadow-premium;
   }
   
   .data-card-header {
@@ -151,7 +151,7 @@
   }
   
   .data-card-title {
-    @apply text-lg font-semibold text-gray-900;
+    @apply text-lg font-semibold text-gray-900 font-serif;
   }
   
   .data-table {
@@ -172,7 +172,7 @@
   
   /* Premium Statistic Cards */
   .stat-card {
-    @apply glass-card p-6 flex flex-col;
+    @apply glass-card p-6 flex flex-col shadow-premium hover:shadow-premium-hover transition-all;
   }
   
   .stat-title {
@@ -247,4 +247,3 @@
   right: 5%;
   filter: blur(80px);
 }
-
