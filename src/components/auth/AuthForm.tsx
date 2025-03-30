@@ -40,7 +40,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
       setTimeout(() => {
         if (mode === 'login') {
           // Manager login with specific credentials
-          if (role === 'manager' && email === 'manager' && password === 'admin') {
+          if (role === 'manager' && email === 'manager@gmail.com' && password === 'admin') {
             // Manager login success
             login({ role: 'manager', email, name: 'Bank Manager' });
             toast.success("Welcome back, Bank Manager");
@@ -128,7 +128,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
   
   const handleBiometricSuccess = () => {
     // For demo, just log in as manager
-    login({ role: 'manager', email: 'manager', name: 'Bank Manager' });
+    login({ role: 'manager', email: 'manager@gmail.com', name: 'Bank Manager' });
     toast.success("Biometric authentication successful");
     navigate('/manager');
   };
@@ -187,14 +187,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={role === 'manager' ? 'manager' : 'your@email.com'}
+              placeholder={role === 'manager' ? 'manager@gmail.com' : 'your@email.com'}
               className="pl-10"
               required
             />
           </div>
           {role === 'manager' && (
             <p className="text-xs text-banking-muted mt-1">
-              Use "manager" as username and "admin" as password for manager access
+              Use "manager@gmail.com" as email and "admin" as password for manager access
             </p>
           )}
         </div>
@@ -242,7 +242,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
             className="pl-3"
           />
           <p className="text-xs text-banking-muted">
-            We'll send security alerts to this number
+            We'll send security alerts to this number via WhatsApp
           </p>
         </div>
         

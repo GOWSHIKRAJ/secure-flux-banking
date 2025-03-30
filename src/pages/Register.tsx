@@ -7,9 +7,9 @@ import BackgroundImage from '@/components/home/BackgroundImage';
 const Register = () => {
   return (
     <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 relative">
-      {/* Background Image */}
+      {/* Background Image - using elegant financial district image */}
       <BackgroundImage 
-        imageUrl="https://images.unsplash.com/photo-1607163365613-c281acde5013?q=80&w=2400"
+        imageUrl="https://images.unsplash.com/photo-1565373679580-fc0cb7be60a2?q=80&w=2400"
         opacity={0.05}
       />
       
@@ -23,7 +23,7 @@ const Register = () => {
         </p>
       </div>
       
-      <div className="w-full max-w-md glass-card p-8 backdrop-blur-md">
+      <div className="w-full max-w-md glass-card p-8 backdrop-blur-md shadow-xl">
         <AuthForm role="customer" defaultMode="register" />
       </div>
     </div>

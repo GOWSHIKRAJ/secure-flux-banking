@@ -12,11 +12,11 @@ const Login = () => {
   
   return (
     <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 relative">
-      {/* Background Image */}
+      {/* Background Image - using more elegant financial district image */}
       <BackgroundImage 
         imageUrl={role === 'manager' 
-          ? "https://images.unsplash.com/photo-1622126807280-9b5b32b28e77?q=80&w=2400" 
-          : "https://images.unsplash.com/photo-1607944024060-0450380ddd33?q=80&w=2400"
+          ? "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2400" 
+          : "https://images.unsplash.com/photo-1501167786227-4cba60f6d378?q=80&w=2400"
         }
         opacity={0.05}
       />
@@ -30,7 +30,7 @@ const Login = () => {
         </h1>
         <p className="mt-2 text-banking-muted max-w-md">
           {role === 'manager' 
-            ? 'Secure login for bank management personnel. Use "manager" and "admin" credentials.'
+            ? 'Secure login for bank management personnel. Use "manager@gmail.com" and "admin" credentials.'
             : 'Access your secure banking dashboard with state-of-the-art encryption'}
         </p>
       </div>
