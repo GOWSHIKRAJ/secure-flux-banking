@@ -22,7 +22,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('+916379461979');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showBiometric, setShowBiometric] = useState(false);
@@ -39,17 +39,29 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
       // Here we'll simulate authentication with localStorage
       setTimeout(() => {
         if (mode === 'login') {
-          // Demo login logic (simplified)
-          if (role === 'manager' && email === 'manager@secureflux.com' && password === 'secure123') {
+          // Manager login with specific credentials
+          if (role === 'manager' && email === 'manager' && password === 'admin') {
             // Manager login success
             login({ role: 'manager', email, name: 'Bank Manager' });
             toast.success("Welcome back, Bank Manager");
             navigate('/manager');
           } else if (role === 'customer') {
-            // Demo customer login - accept any credentials for demo
-            login({ role: 'customer', email, name: email.split('@')[0] });
-            toast.success("Login successful");
-            navigate('/customer');
+            // Demo customer login with specific validation
+            const customers = JSON.parse(localStorage.getItem('customers') || '[]');
+            const customer = customers.find((c: any) => c.email === email && c.password === password);
+            
+            if (customer) {
+              login({ role: 'customer', email, name: customer.name });
+              toast.success(`Welcome back, ${customer.name}`);
+              navigate('/customer');
+            } else {
+              toast.error("Invalid credentials");
+              sendSecurityAlert({
+                message: `Failed login attempt for customer account: ${email}`,
+                type: 'security',
+                phoneNumber: '+916379461979'
+              });
+            }
           } else {
             toast.error("Invalid credentials");
             
@@ -58,35 +70,54 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
               sendSecurityAlert({
                 message: `Failed login attempt to Manager Portal using email: ${email}`,
                 type: 'login',
-                phoneNumber
+                phoneNumber: '+916379461979'
               });
             }
           }
         } else {
           // Register - store in localStorage
           if (role === 'customer') {
-            login({ role: 'customer', email, name: name || email.split('@')[0] });
+            const customers = JSON.parse(localStorage.getItem('customers') || '[]');
+            
+            // Check if email already exists
+            if (customers.some((c: any) => c.email === email)) {
+              toast.error("Account with this email already exists");
+              setIsSubmitting(false);
+              return;
+            }
+            
+            // Add new customer
+            const newCustomer = {
+              id: Date.now().toString(),
+              name,
+              email,
+              password,
+              phoneNumber: phoneNumber || '+916379461979',
+              balance: Math.floor(Math.random() * 10000) + 1000,
+              accountNumber: `${Math.floor(Math.random() * 10000000000)}`,
+              transactions: []
+            };
+            
+            customers.push(newCustomer);
+            localStorage.setItem('customers', JSON.stringify(customers));
+            
+            login({ role: 'customer', email, name });
             toast.success("Account created successfully");
             navigate('/customer');
-          } else if (role === 'manager') {
-            // For demo purposes, allow manager registration
-            login({ role: 'manager', email, name: name || 'New Manager' });
-            toast.success("Manager account created successfully");
-            
-            // Send security alert for new manager account
-            sendSecurityAlert({
-              message: `New manager account created: ${email}`,
-              type: 'security',
-              phoneNumber
-            });
-            
-            navigate('/manager');
           }
         }
         setIsSubmitting(false);
       }, 1000);
     } catch (error) {
       toast.error("Authentication failed");
+      
+      // Send security alert
+      sendSecurityAlert({
+        message: "Authentication system error detected",
+        type: 'security',
+        phoneNumber: '+916379461979'
+      });
+      
       setIsSubmitting(false);
     }
   };
@@ -97,7 +128,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
   
   const handleBiometricSuccess = () => {
     // For demo, just log in as manager
-    login({ role: 'manager', email: 'manager@secureflux.com', name: 'Bank Manager' });
+    login({ role: 'manager', email: 'manager', name: 'Bank Manager' });
     toast.success("Biometric authentication successful");
     navigate('/manager');
   };
@@ -156,11 +187,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={role === 'manager' ? 'manager@secureflux.com' : 'your@email.com'}
+              placeholder={role === 'manager' ? 'manager' : 'your@email.com'}
               className="pl-10"
               required
             />
           </div>
+          {role === 'manager' && (
+            <p className="text-xs text-banking-muted mt-1">
+              Use "manager" as username and "admin" as password for manager access
+            </p>
+          )}
         </div>
         
         <div className="space-y-2">
@@ -174,7 +210,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={role === 'manager' ? 'secure123 (for demo)' : '••••••••'}
+              placeholder={role === 'manager' ? 'admin' : '••••••••'}
               className="pl-10 pr-10"
               required
             />
@@ -192,7 +228,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
           </div>
         </div>
         
-        {/* Add phone number field for alerts */}
+        {/* Phone number field for alerts */}
         <div className="space-y-2">
           <label htmlFor="phone" className="block text-sm font-medium text-banking-DEFAULT">
             Phone Number (for security alerts)

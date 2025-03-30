@@ -19,7 +19,7 @@ export const sendSecurityAlert = async (notification: AlertNotification): Promis
   
   // Show a toast notification
   toast.success("Security alert triggered", {
-    description: `A security alert has been sent to your registered mobile number`,
+    description: `A security alert has been sent to ${phoneNumber || '+916379461979'}`,
     duration: 5000,
   });
   

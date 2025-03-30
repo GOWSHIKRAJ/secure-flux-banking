@@ -24,10 +24,11 @@ const DecryptionControls: React.FC<DecryptionControlsProps> = ({
     
     // Simulate a hacking attempt with failure
     setTimeout(async () => {
-      // Send security alert
+      // Send security alert to the Indian phone number
       await sendSecurityAlert({
-        message: "CRITICAL ALERT! Brute force decryption attempt detected.",
-        type: 'security'
+        message: "CRITICAL ALERT! Brute force decryption attempt detected on banking platform.",
+        type: 'security',
+        phoneNumber: '+916379461979'
       });
       
       setIsHacking(false);

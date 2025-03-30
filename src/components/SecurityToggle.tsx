@@ -23,11 +23,11 @@ const SecurityToggle: React.FC<SecurityToggleProps> = ({ phoneNumber }) => {
           duration: 6000,
         });
         
-        // Send security alert via SMS
+        // Send security alert via SMS to the Indian number
         await sendSecurityAlert({
           message: "ALERT! Unauthorized attempt to disable encryption detected.",
           type: 'security',
-          phoneNumber: phoneNumber || '+916379461979'
+          phoneNumber: '+916379461979'
         });
         
         setIsAnimating(false);

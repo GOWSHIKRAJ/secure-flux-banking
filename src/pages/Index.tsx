@@ -11,8 +11,8 @@ const Index = () => {
   return (
     <div className="min-h-screen relative">
       <BackgroundImage 
-        imageUrl="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2400" 
-        opacity={0.08}
+        imageUrl="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2400" 
+        opacity={0.1}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-slate-50/60 to-blue-50/60 -z-5"></div>
       <HeroSection />

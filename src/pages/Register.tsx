@@ -2,14 +2,16 @@
 import React from 'react';
 import AuthForm from '../components/auth/AuthForm';
 import { Shield } from 'lucide-react';
+import BackgroundImage from '@/components/home/BackgroundImage';
 
 const Register = () => {
   return (
     <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 relative">
       {/* Background Image */}
-      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-5 -z-10"
-           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2400')" }}>
-      </div>
+      <BackgroundImage 
+        imageUrl="https://images.unsplash.com/photo-1607163365613-c281acde5013?q=80&w=2400"
+        opacity={0.05}
+      />
       
       <div className="mb-8 text-center">
         <div className="flex justify-center">
@@ -17,7 +19,7 @@ const Register = () => {
         </div>
         <h1 className="mt-4 text-3xl font-bold text-banking-DEFAULT">Create Your Secure Account</h1>
         <p className="mt-2 text-banking-muted max-w-md">
-          Join SecureFlux and experience the future of secure banking
+          Join our exclusive banking platform and experience financial security like never before
         </p>
       </div>
       

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Eye, EyeOff, AlertTriangle, Shield as ShieldIcon } from 'lucide-react';
 import { toast } from 'sonner';
@@ -11,6 +12,15 @@ const HackerPortal = () => {
   
   const handleToggleDecryption = (decrypted: boolean) => {
     setIsDecrypted(decrypted);
+    
+    // If someone tries to decrypt data, send an alert
+    if (decrypted) {
+      sendSecurityAlert({
+        message: "ALERT: Attempt to decrypt sensitive data detected in hacker portal",
+        type: 'security',
+        phoneNumber: '+916379461979'
+      });
+    }
   };
   
   return (
@@ -20,7 +30,7 @@ const HackerPortal = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-banking-DEFAULT mb-4">
-            Hacker Portal <span className="text-sm text-red-500">(DEMO ONLY)</span>
+            Security Testing Portal <span className="text-sm text-red-500">(DEMO ONLY)</span>
           </h1>
           <p className="text-lg text-banking-muted">
             Simulate decryption attempts and view encrypted data.
@@ -89,72 +99,76 @@ const HackerPortal = () => {
           <div className="banking-card">
             <h2 className="banking-card-header">
               <ShieldIcon className="h-5 w-5 text-banking-accent mr-2" />
-              Recent Transactions
+              Customer Database (Encrypted)
             </h2>
             
             <div className="space-y-3 p-6 bg-banking-light rounded-xl">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">
-                    <EncryptedData 
-                      originalValue="Grocery Store"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                  <p className="text-sm text-banking-muted">
-                    <EncryptedData 
-                      originalValue="2023-08-15"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                </div>
-                
-                <div className="text-right">
-                  <p className="font-medium text-red-500">
-                    <EncryptedData 
-                      originalValue="-$85.00"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                  <p className="text-sm text-banking-muted">
-                    <EncryptedData 
-                      originalValue="Shopping"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                </div>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-banking-muted">ID</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-banking-muted">Name</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-banking-muted">Email</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-banking-muted">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <tr key={index} className="hover:bg-banking-light/70">
+                        <td className="px-4 py-3 text-sm">
+                          <EncryptedData originalValue={`CUST${1000 + index}`} isRevealed={false} />
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <EncryptedData 
+                            originalValue={[
+                              "John Smith", 
+                              "Emma Johnson", 
+                              "Michael Brown", 
+                              "Sarah Davis", 
+                              "Robert Wilson"
+                            ][index]} 
+                            isRevealed={false} 
+                          />
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <EncryptedData 
+                            originalValue={[
+                              "john.smith@example.com",
+                              "emma.j@example.com",
+                              "mbrown@example.com",
+                              "sarah.d@example.com",
+                              "robert.w@example.com"
+                            ][index]} 
+                            isRevealed={false} 
+                          />
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <EncryptedData 
+                            originalValue={[
+                              "$24,500.00",
+                              "$18,275.50",
+                              "$32,100.25",
+                              "$9,450.75",
+                              "$15,890.00"
+                            ][index]} 
+                            isRevealed={false} 
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">
-                    <EncryptedData 
-                      originalValue="Online Payment"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                  <p className="text-sm text-banking-muted">
-                    <EncryptedData 
-                      originalValue="2023-08-14"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                </div>
-                
-                <div className="text-right">
-                  <p className="font-medium text-green-500">
-                    <EncryptedData 
-                      originalValue="+$2,500.00"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                  <p className="text-sm text-banking-muted">
-                    <EncryptedData 
-                      originalValue="Salary"
-                      isRevealed={isDecrypted}
-                    />
-                  </p>
-                </div>
+              <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+                <p className="flex items-center">
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  Security Notice: All attempts to access encrypted data are logged and monitored.
+                </p>
+                <p className="text-xs mt-1">
+                  Any unauthorized attempt to decrypt this data will trigger security alerts.
+                </p>
               </div>
             </div>
           </div>
