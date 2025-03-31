@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      customers: {
+        Row: {
+          account_number: string
+          balance: number
+          created_at: string | null
+          email: string
+          id: string
+          last_login: string | null
+          name: string
+          password: string
+        }
+        Insert: {
+          account_number: string
+          balance?: number
+          created_at?: string | null
+          email: string
+          id?: string
+          last_login?: string | null
+          name: string
+          password: string
+        }
+        Update: {
+          account_number?: string
+          balance?: number
+          created_at?: string | null
+          email?: string
+          id?: string
+          last_login?: string | null
+          name?: string
+          password?: string
+        }
+        Relationships: []
+      }
       Gowshik: {
         Row: {
           created_at: string
@@ -23,6 +56,41 @@ export type Database = {
           id?: number
         }
         Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          customer_id: string
+          description: string
+          id: string
+          type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          customer_id: string
+          description: string
+          id?: string
+          type: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          customer_id?: string
+          description?: string
+          id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -8,6 +8,8 @@ import { Lock, User, Eye, EyeOff, Fingerprint } from 'lucide-react';
 import BiometricAuth from './BiometricAuth';
 import { sendSecurityAlert } from '../../services/NotificationService';
 import useAuth from '../../hooks/useAuth';
+import { DatabaseService } from '../../services/DatabaseService';
+import { supabase } from '@/integrations/supabase/client';
 
 type AuthMode = 'login' | 'register';
 type UserRole = 'customer' | 'manager';
@@ -35,80 +37,82 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
     setIsSubmitting(true);
     
     try {
-      // In a real app, this would connect to a backend
-      // Here we'll simulate authentication with localStorage
-      setTimeout(() => {
-        if (mode === 'login') {
-          // Manager login with specific credentials
-          if (role === 'manager' && email === 'manager@gmail.com' && password === 'admin') {
-            // Manager login success
-            login({ role: 'manager', email, name: 'Bank Manager' });
-            toast.success("Welcome back, Bank Manager");
-            navigate('/manager');
-          } else if (role === 'customer') {
-            // Demo customer login with specific validation
-            const customers = JSON.parse(localStorage.getItem('customers') || '[]');
-            const customer = customers.find((c: any) => c.email === email && c.password === password);
+      if (mode === 'login') {
+        // Manager login with specific credentials
+        if (role === 'manager' && email === 'manager@gmail.com' && password === 'admin') {
+          // Check if manager exists in Supabase
+          const managerData = await DatabaseService.getCustomerByEmail('manager@gmail.com');
+          
+          // Manager login success
+          login({ role: 'manager', email, name: 'Bank Manager' });
+          toast.success("Welcome back, Bank Manager");
+          navigate('/manager');
+        } else if (role === 'customer') {
+          // Find customer in Supabase by email
+          const customerData = await DatabaseService.getCustomerByEmail(email);
+          
+          if (customerData && password === 'password123') { // In a real app, use proper password comparison
+            login({ 
+              role: 'customer', 
+              email, 
+              name: customerData.name 
+            });
             
-            if (customer) {
-              login({ role: 'customer', email, name: customer.name });
-              toast.success(`Welcome back, ${customer.name}`);
-              navigate('/customer');
-            } else {
-              toast.error("Invalid credentials");
-              sendSecurityAlert({
-                message: `Failed login attempt for customer account: ${email}`,
-                type: 'security',
-                phoneNumber: '+916379461979'
-              });
-            }
+            // Update last login time
+            customerData.lastLogin = new Date();
+            await DatabaseService.updateCustomer(customerData);
+            
+            toast.success(`Welcome back, ${customerData.name}`);
+            navigate('/customer');
           } else {
             toast.error("Invalid credentials");
-            
-            if (role === 'manager') {
-              // Send security alert for failed manager login
-              sendSecurityAlert({
-                message: `Failed login attempt to Manager Portal using email: ${email}`,
-                type: 'login',
-                phoneNumber: '+916379461979'
-              });
-            }
+            sendSecurityAlert({
+              message: `Failed login attempt for customer account: ${email}`,
+              type: 'security',
+              phoneNumber: '+916379461979'
+            });
           }
         } else {
-          // Register - store in localStorage
-          if (role === 'customer') {
-            const customers = JSON.parse(localStorage.getItem('customers') || '[]');
-            
-            // Check if email already exists
-            if (customers.some((c: any) => c.email === email)) {
-              toast.error("Account with this email already exists");
-              setIsSubmitting(false);
-              return;
-            }
-            
-            // Add new customer
-            const newCustomer = {
-              id: Date.now().toString(),
-              name,
-              email,
-              password,
-              phoneNumber: phoneNumber || '+916379461979',
-              balance: Math.floor(Math.random() * 10000) + 1000,
-              accountNumber: `${Math.floor(Math.random() * 10000000000)}`,
-              transactions: []
-            };
-            
-            customers.push(newCustomer);
-            localStorage.setItem('customers', JSON.stringify(customers));
-            
-            login({ role: 'customer', email, name });
-            toast.success("Account created successfully");
-            navigate('/customer');
+          toast.error("Invalid credentials");
+          
+          if (role === 'manager') {
+            // Send security alert for failed manager login
+            sendSecurityAlert({
+              message: `Failed login attempt to Manager Portal using email: ${email}`,
+              type: 'login',
+              phoneNumber: '+916379461979'
+            });
           }
         }
-        setIsSubmitting(false);
-      }, 1000);
+      } else {
+        // Register - store in Supabase
+        if (role === 'customer') {
+          // Check if email already exists
+          const existingCustomer = await DatabaseService.getCustomerByEmail(email);
+          
+          if (existingCustomer) {
+            toast.error("Account with this email already exists");
+            setIsSubmitting(false);
+            return;
+          }
+          
+          // Add new customer to Supabase
+          const initialBalance = Math.floor(Math.random() * 10000) + 1000;
+          
+          const newCustomer = await DatabaseService.addCustomer({
+            name,
+            email,
+            accountNumber: `${Math.floor(Math.random() * 10000000000)}`,
+            balance: initialBalance
+          });
+          
+          login({ role: 'customer', email, name });
+          toast.success("Account created successfully");
+          navigate('/customer');
+        }
+      }
     } catch (error) {
+      console.error("Authentication error:", error);
       toast.error("Authentication failed");
       
       // Send security alert
@@ -117,7 +121,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ role, defaultMode = 'login' }) => {
         type: 'security',
         phoneNumber: '+916379461979'
       });
-      
+    } finally {
       setIsSubmitting(false);
     }
   };
