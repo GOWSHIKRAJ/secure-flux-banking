@@ -9,8 +9,8 @@ const Register = () => {
     <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 relative">
       {/* Background Image - using elegant financial district image */}
       <BackgroundImage 
-        imageUrl="https://images.unsplash.com/photo-1565373679580-fc0cb7be60a2?q=80&w=2400"
-        opacity={0.05}
+        imageUrl="https://images.unsplash.com/photo-1579621970590-9d624316904b?q=80&w=2400"
+        opacity={0.1}
       />
       
       <div className="mb-8 text-center">
@@ -23,7 +23,7 @@ const Register = () => {
         </p>
       </div>
       
-      <div className="w-full max-w-md glass-card p-8 backdrop-blur-md shadow-xl">
+      <div className="w-full max-w-md glass-card p-8 backdrop-blur-md shadow-xl rounded-lg border border-white/10">
         <AuthForm role="customer" defaultMode="register" />
       </div>
     </div>

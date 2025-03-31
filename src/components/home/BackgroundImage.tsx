@@ -22,7 +22,7 @@ const BackgroundImage: React.FC<BackgroundImageProps> = ({
         }}
       />
       {overlay && (
-        <div className="absolute inset-0 bg-gradient-to-br from-banking-dark/20 via-banking-dark/10 to-banking-light/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-banking-dark/40 via-banking-dark/30 to-banking-light/20"></div>
       )}
     </div>
   );

@@ -12,13 +12,13 @@ const Login = () => {
   
   return (
     <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 relative">
-      {/* Background Image - using more elegant financial district image */}
+      {/* Background Image - using professional financial district image */}
       <BackgroundImage 
         imageUrl={role === 'manager' 
-          ? "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2400" 
-          : "https://images.unsplash.com/photo-1501167786227-4cba60f6d378?q=80&w=2400"
+          ? "https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=2400" 
+          : "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?q=80&w=2400"
         }
-        opacity={0.05}
+        opacity={0.1}
       />
       
       <div className="mb-8 text-center">
@@ -35,7 +35,7 @@ const Login = () => {
         </p>
       </div>
       
-      <div className="w-full max-w-md glass-card p-8 backdrop-blur-md">
+      <div className="w-full max-w-md glass-card p-8 backdrop-blur-md shadow-xl rounded-lg border border-white/10">
         <AuthForm role={role} defaultMode="login" />
       </div>
     </div>
