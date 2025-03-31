@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Shield } from 'lucide-react';
 import MoneyTransferForm from './MoneyTransferForm';
 
 interface SendMoneyModalProps {
@@ -27,13 +27,20 @@ const SendMoneyModal: React.FC<SendMoneyModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div 
+        className="w-full max-w-md bg-white rounded-lg shadow-xl" 
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-semibold">Send Money</h2>
+          <div className="flex items-center">
+            <Shield className="h-5 w-5 text-banking-accent mr-2" />
+            <h2 className="text-xl font-semibold">Secure Money Transfer</h2>
+          </div>
           <button 
             onClick={onClose}
             className="p-1 rounded-full hover:bg-gray-100"
+            aria-label="Close"
           >
             <X className="h-5 w-5" />
           </button>
