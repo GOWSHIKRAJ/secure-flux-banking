@@ -1,5 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { sendSecurityAlert } from "@/services/NotificationService";
 
 export interface Customer {
   id: string;
@@ -154,6 +155,12 @@ export const DatabaseService = {
         throw error;
       }
       
+      // Send notification about new account creation
+      await sendSecurityAlert({
+        message: `New account created for ${customer.name} with account number ${accountNumber}`,
+        type: 'security'
+      });
+      
       return {
         id: data.id,
         name: data.name,
@@ -242,9 +249,22 @@ export const DatabaseService = {
         console.error('Error creating recipient transaction:', recipientTransactionError);
       }
       
+      // Send real-time notification about the transaction
+      await sendSecurityAlert({
+        message: `Transfer of $${amount} from account ${fromAccountNumber} to ${toAccountNumber} completed successfully.`,
+        type: 'transaction'
+      });
+      
       return true;
     } catch (error) {
       console.error('Transfer failed:', error);
+      
+      // Send alert about failed transaction
+      await sendSecurityAlert({
+        message: `ALERT: Failed transfer attempt of $${amount} from account ${fromAccountNumber} to ${toAccountNumber}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        type: 'transaction'
+      });
+      
       throw error;
     }
   },
@@ -268,6 +288,12 @@ export const DatabaseService = {
         throw error;
       }
       
+      // Send notification about account update
+      await sendSecurityAlert({
+        message: `Account information updated for ${customer.name} (Account: ${customer.accountNumber})`,
+        type: 'security'
+      });
+      
       return customer;
     } catch (error) {
       console.error('Failed to update customer:', error);
@@ -278,6 +304,17 @@ export const DatabaseService = {
   // Delete customer
   deleteCustomer: async (id: string): Promise<boolean> => {
     try {
+      // Get customer details before deletion for the notification
+      const { data: customerData, error: customerError } = await supabase
+        .from('customers')
+        .select('name, account_number')
+        .eq('id', id)
+        .single();
+        
+      if (customerError) {
+        console.error('Error fetching customer details before deletion:', customerError);
+      }
+      
       const { error } = await supabase
         .from('customers')
         .delete()
@@ -288,10 +325,53 @@ export const DatabaseService = {
         throw error;
       }
       
+      // Send notification about account deletion
+      if (customerData) {
+        await sendSecurityAlert({
+          message: `Account deleted for ${customerData.name} (Account: ${customerData.account_number})`,
+          type: 'security'
+        });
+      }
+      
       return true;
     } catch (error) {
       console.error('Failed to delete customer:', error);
       throw error;
+    }
+  },
+  
+  // Log login attempt
+  logLoginAttempt: async (email: string, successful: boolean): Promise<void> => {
+    try {
+      if (successful) {
+        // Update last login time
+        const { error } = await supabase
+          .from('customers')
+          .update({ last_login: new Date().toISOString() })
+          .eq('email', email);
+          
+        if (error) {
+          console.error('Error updating last login time:', error);
+        }
+        
+        // Get customer details for the alert
+        const customer = await DatabaseService.getCustomerByEmail(email);
+        
+        if (customer) {
+          await sendSecurityAlert({
+            message: `Successful login for ${customer.name} (Account: ${customer.accountNumber})`,
+            type: 'login'
+          });
+        }
+      } else {
+        // Send alert about failed login attempt
+        await sendSecurityAlert({
+          message: `ALERT: Failed login attempt for account with email ${email}`,
+          type: 'security'
+        });
+      }
+    } catch (error) {
+      console.error('Failed to log login attempt:', error);
     }
   }
 };

@@ -1,7 +1,7 @@
 
 import { toast } from "sonner";
 
-interface AlertNotification {
+export interface AlertNotification {
   message: string;
   type: 'security' | 'transaction' | 'login';
   phoneNumber?: string;
@@ -19,36 +19,62 @@ export const sendSecurityAlert = async (notification: AlertNotification): Promis
   console.log(`Message: ${message}`);
   console.log(`SIMULATION: WhatsApp alert would be sent to: ${targetPhone}`);
   
-  // Show a toast notification to indicate the simulation
-  toast.success("Security alert triggered", {
-    description: `SIMULATION: A security notification would be sent to ${targetPhone} via WhatsApp in a production environment`,
-    duration: 5000,
-  });
+  // Show different types of toast notifications based on the alert type
+  switch (type) {
+    case 'security':
+      toast.error("Security Alert", {
+        description: message,
+        duration: 5000,
+      });
+      break;
+    case 'transaction':
+      toast.success("Transaction Alert", {
+        description: message,
+        duration: 5000,
+      });
+      break;
+    case 'login':
+      toast.info("Login Alert", {
+        description: message,
+        duration: 5000,
+      });
+      break;
+    default:
+      toast("Notification", {
+        description: message,
+        duration: 5000,
+      });
+  }
   
-  // NOTE: In a production environment, this would use a WhatsApp Business API or a service like Twilio
-  // Example integration that would need to be implemented on a backend server:
-  // await sendToWhatsAppAPI(targetPhone, message);
+  // Simulate sending the WhatsApp message
+  await simulateWhatsAppSending(targetPhone, getFormattedMessage(type, message));
   
   return true;
 };
 
-const sendToWhatsApp = (phoneNumber: string, message: string) => {
-  // IMPORTANT: This is a simulation function
-  // In a real implementation, this would need to be done server-side using:
-  // 1. WhatsApp Business API
-  // 2. Twilio API
-  // 3. Other messaging service providers
+// Simulate sending a WhatsApp message with proper timing
+const simulateWhatsAppSending = async (phoneNumber: string, message: string): Promise<void> => {
+  // Add delay to simulate network request (remove in production)
+  await new Promise(resolve => setTimeout(resolve, 500));
   
-  console.log(`SIMULATION: Sending to WhatsApp: ${phoneNumber}, Message: ${message}`);
+  console.log(`SIMULATION: WhatsApp message sent to ${phoneNumber}`);
+  console.log(`Message content: ${message}`);
   
-  // Actual implementation would require server-side code and API keys that cannot
-  // be safely stored in frontend code
+  // In a real implementation, this would call a server endpoint or use a WhatsApp Business API
 };
 
-// Note: To implement actual WhatsApp messaging in production:
-// 1. Create a backend service (Node.js, Python, etc.)
-// 2. Register for WhatsApp Business API or Twilio
-// 3. Store API keys securely on the server
-// 4. Create an API endpoint that this frontend can call
-// 5. Handle the actual message sending on the backend
-
+// Format the message based on type for better readability in WhatsApp
+const getFormattedMessage = (type: AlertNotification['type'], message: string): string => {
+  const timestamp = new Date().toLocaleString();
+  
+  switch (type) {
+    case 'security':
+      return `🔒 *SECURITY ALERT*\n\n${message}\n\nTimestamp: ${timestamp}`;
+    case 'transaction':
+      return `💰 *TRANSACTION ALERT*\n\n${message}\n\nTimestamp: ${timestamp}`;
+    case 'login':
+      return `🔑 *LOGIN ALERT*\n\n${message}\n\nTimestamp: ${timestamp}`;
+    default:
+      return `📱 *NOTIFICATION*\n\n${message}\n\nTimestamp: ${timestamp}`;
+  }
+};
