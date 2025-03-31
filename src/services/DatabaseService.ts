@@ -70,7 +70,7 @@ export const DatabaseService = {
       const { data: transactionsData, error: transactionsError } = await supabase
         .from('transactions')
         .select('*')
-        .eq('customer_id', data.id);
+        .eq('customer_id', data.id.toString());
         
       if (transactionsError) {
         console.error('Error fetching transactions:', transactionsError);
@@ -143,7 +143,7 @@ export const DatabaseService = {
           name: customer.name,
           email: customer.email,
           account_number: accountNumber,
-          balance: customer.balance || 1000, // Default starting balance
+          balance: customer.balance.toString() || '1000', // Convert balance to string for Supabase
           password: 'password123' // In a real app, this would be properly hashed
         }])
         .select()
@@ -194,8 +194,8 @@ export const DatabaseService = {
       // Update sender's balance
       const { error: senderError } = await supabase
         .from('customers')
-        .update({ balance: sender.balance - amount })
-        .eq('id', sender.id);
+        .update({ balance: (sender.balance - amount).toString() })
+        .eq('id', sender.id.toString());
         
       if (senderError) {
         console.error('Error updating sender balance:', senderError);
@@ -205,8 +205,8 @@ export const DatabaseService = {
       // Update recipient's balance
       const { error: recipientError } = await supabase
         .from('customers')
-        .update({ balance: recipient.balance + amount })
-        .eq('id', recipient.id);
+        .update({ balance: (recipient.balance + amount).toString() })
+        .eq('id', recipient.id.toString());
         
       if (recipientError) {
         console.error('Error updating recipient balance:', recipientError);
@@ -219,7 +219,7 @@ export const DatabaseService = {
         .from('transactions')
         .insert([{
           customer_id: sender.id,
-          amount: -amount,
+          amount: (-amount).toString(),
           description: `Transfer to ${toAccountNumber}: ${description}`,
           type: 'transfer'
         }]);
@@ -233,7 +233,7 @@ export const DatabaseService = {
         .from('transactions')
         .insert([{
           customer_id: recipient.id,
-          amount: amount,
+          amount: amount.toString(),
           description: `Transfer from ${fromAccountNumber}: ${description}`,
           type: 'transfer'
         }]);
@@ -258,10 +258,10 @@ export const DatabaseService = {
           name: customer.name,
           email: customer.email,
           account_number: customer.accountNumber,
-          balance: customer.balance,
+          balance: customer.balance.toString(),
           last_login: new Date().toISOString()
         })
-        .eq('id', customer.id);
+        .eq('id', customer.id.toString());
         
       if (error) {
         console.error('Error updating customer:', error);
