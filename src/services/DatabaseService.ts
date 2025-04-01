@@ -140,13 +140,13 @@ export const DatabaseService = {
       
       const { data, error } = await supabase
         .from('customers')
-        .insert([{
+        .insert({
           name: customer.name,
           email: customer.email,
           account_number: accountNumber,
-          balance: customer.balance.toString() || '1000', // Convert balance to string for Supabase
+          balance: customer.balance,
           password: 'password123' // In a real app, this would be properly hashed
-        }])
+        })
         .select()
         .single();
       
@@ -201,8 +201,8 @@ export const DatabaseService = {
       // Update sender's balance
       const { error: senderError } = await supabase
         .from('customers')
-        .update({ balance: (sender.balance - amount).toString() })
-        .eq('id', sender.id.toString());
+        .update({ balance: sender.balance - amount })
+        .eq('id', sender.id);
         
       if (senderError) {
         console.error('Error updating sender balance:', senderError);
@@ -212,8 +212,8 @@ export const DatabaseService = {
       // Update recipient's balance
       const { error: recipientError } = await supabase
         .from('customers')
-        .update({ balance: (recipient.balance + amount).toString() })
-        .eq('id', recipient.id.toString());
+        .update({ balance: recipient.balance + amount })
+        .eq('id', recipient.id);
         
       if (recipientError) {
         console.error('Error updating recipient balance:', recipientError);
@@ -224,12 +224,12 @@ export const DatabaseService = {
       // Create transaction record for sender
       const { error: senderTransactionError } = await supabase
         .from('transactions')
-        .insert([{
+        .insert({
           customer_id: sender.id,
-          amount: (-amount).toString(),
+          amount: -amount,
           description: `Transfer to ${toAccountNumber}: ${description}`,
           type: 'transfer'
-        }]);
+        });
         
       if (senderTransactionError) {
         console.error('Error creating sender transaction:', senderTransactionError);
@@ -238,12 +238,12 @@ export const DatabaseService = {
       // Create transaction record for recipient
       const { error: recipientTransactionError } = await supabase
         .from('transactions')
-        .insert([{
+        .insert({
           customer_id: recipient.id,
-          amount: amount.toString(),
+          amount: amount,
           description: `Transfer from ${fromAccountNumber}: ${description}`,
           type: 'transfer'
-        }]);
+        });
         
       if (recipientTransactionError) {
         console.error('Error creating recipient transaction:', recipientTransactionError);
@@ -278,10 +278,10 @@ export const DatabaseService = {
           name: customer.name,
           email: customer.email,
           account_number: customer.accountNumber,
-          balance: customer.balance.toString(),
+          balance: customer.balance,
           last_login: new Date().toISOString()
         })
-        .eq('id', customer.id.toString());
+        .eq('id', customer.id);
         
       if (error) {
         console.error('Error updating customer:', error);
