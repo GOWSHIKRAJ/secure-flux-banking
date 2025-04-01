@@ -1,31 +1,56 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, AlertTriangle, Shield as ShieldIcon } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from "sonner";
 import { Toaster } from '@/components/ui/sonner';
 import DecryptionControls from '../components/hacker/DecryptionControls';
 import EncryptedData from '../components/EncryptedData';
 import { sendSecurityAlert } from '../services/NotificationService';
+import LockScreen from '../components/hacker/LockScreen';
 
 const HackerPortal = () => {
   const [isDecrypted, setIsDecrypted] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [decryptionAttempts, setDecryptionAttempts] = useState(0);
   
   const handleToggleDecryption = (decrypted: boolean) => {
-    setIsDecrypted(decrypted);
+    // If system is locked, prevent any action
+    if (isLocked) return;
     
-    // If someone tries to decrypt data, send an alert
     if (decrypted) {
+      // Increment attempts
+      const newAttempts = decryptionAttempts + 1;
+      setDecryptionAttempts(newAttempts);
+      
+      // Lock the system after first attempt
+      setIsLocked(true);
+      
+      // Send security alert
       sendSecurityAlert({
-        message: "ALERT: Attempt to decrypt sensitive data detected in hacker portal",
+        message: "CRITICAL: Attempt to decrypt sensitive data detected. System locked.",
         type: 'security',
         phoneNumber: '+916379461979'
       });
+      
+      // Don't actually decrypt
+      setIsDecrypted(false);
+    } else {
+      setIsDecrypted(false);
     }
+  };
+  
+  const handleUnlock = () => {
+    setIsLocked(false);
+    toast.success("System unlocked", {
+      description: "Access restored by manager authorization",
+    });
   };
   
   return (
     <div className="min-h-screen bg-banking-page-gradient text-white py-20">
       <Toaster />
+      
+      {isLocked && <LockScreen onUnlock={handleUnlock} />}
       
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
@@ -167,7 +192,7 @@ const HackerPortal = () => {
                   Security Notice: All attempts to access encrypted data are logged and monitored.
                 </p>
                 <p className="text-xs mt-1">
-                  Any unauthorized attempt to decrypt this data will trigger security alerts.
+                  Any unauthorized attempt to decrypt this data will trigger security alerts and lock the system.
                 </p>
               </div>
             </div>
